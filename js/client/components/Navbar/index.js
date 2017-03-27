@@ -43,7 +43,7 @@ class Navbar extends Component {
             className="navbar-brand"
             href="/"
           >
-            vip
+            ncp
           </a>
 
           <div

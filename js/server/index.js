@@ -18,16 +18,17 @@ import multer from 'multer';
 
 import {schemaGet} from './schema';
 
-const ip = process.env.OPENSHIFT_NODEJS_IP ||
-  null;
-const port = process.env.OPENSHIFT_NODEJS_PORT ||
-  3000;
+const ip = process.env.OPENSHIFT_NODEJS_IP || null;
+const port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 const nodeEnv = process.env.NODE_ENV;
-const mongourl = `${process.env.MONGODB_URL ||
-  process.env.MONGO_URL}vip`;
+const mongourl = `${process.env.MONGODB_URL || process.env.MONGO_URL}vip`;
+
+//Setting Mongo collections
 const profileCollectionName = 'profile';
 const userCollectionName = 'user';
+const patientCollectionName = 'patient';
 
+//Connecting to Mongo
 const dbConnect = (mongourl) => {
   return new Promise((resolve) => {
     return MongoClient.connect(
@@ -40,6 +41,7 @@ const dbConnect = (mongourl) => {
   });
 };
 
+//Creating index for Profile
 const dbDropIndexes = (db) => {
   return new Promise((resolve) => {
     return db.collection(profileCollectionName)
@@ -72,6 +74,8 @@ const dbCreateIndex = (db) => {
   });
 };
 
+
+//Creating Graphql schema
 const schemaUpdate = (db) => {
   return new Promise((resolve) => {
     return graphql(
@@ -91,6 +95,8 @@ const schemaUpdate = (db) => {
   });
 };
 
+
+//Setting up Passport and Graphql server
 const passportUserSerializeDeserialize = (db) => {
   passport.serializeUser(({_id: userLocalId}, done) => {
     return done(null, userLocalId);
