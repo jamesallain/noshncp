@@ -24,6 +24,7 @@ class User extends Component {
     );
   }
   render() {
+    console.log("user index:",this.props.viewer)
     return (
       <div className = 'User'>
         {this.updateRender()}

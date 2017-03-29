@@ -4,9 +4,11 @@ import React, {Component} from 'react';
 import Relay, {createContainer} from 'react-relay';
 
 import Jumbotron from './Jumbotron';
-import Experience from './Experience';
-import Education from './Education';
-import Skill from './Skill';
+import Assessment from './Assessment';
+import Diagnosis from './Diagnosis';
+import Intervention from './Intervention';
+import Evaluation from './Evaluation';
+
 
 class Node extends Component {
   jumbotronRender() {
@@ -18,27 +20,38 @@ class Node extends Component {
       />
     );
   }
-  experienceRender() {
+  assessmentRender() {
     return (
-      <Experience
+      <Assessment
         node = {this.props.node}
         isCreator = {this.props.isCreator}
         viewer = {this.props.viewer}
       />
     );
   }
-  educationRender() {
+  diagnosisRender() {
     return (
-      <Education
+      <Diagnosis
         node = {this.props.node}
+        isCreator = {this.props.isCreator}
+        viewer = {this.props.viewer}
+      />
+    );
+  }  
+  interventionRender() {
+    return (
+      <Intervention
+        node = {this.props.node}
+       isCreator = {this.props.isCreator}
         viewer = {this.props.viewer}
       />
     );
   }
-  skillRender() {
+  evaluationRender() {
     return (
-      <Skill
+      <Evaluation
         node = {this.props.node}
+        isCreator = {this.props.isCreator}
         viewer = {this.props.viewer}
       />
     );
@@ -47,11 +60,13 @@ class Node extends Component {
     return (this.props.node) &&
       <div>
         {this.jumbotronRender()}
-        {this.experienceRender()}
+        {this.assessmentRender()}
         <hr/>
-        {this.educationRender()}
+        {this.diagnosisRender()}
         <hr/>
-        {this.skillRender()}
+        {this.interventionRender()}
+        <hr/>
+        {this.evaluationRender()}
       </div>;
   }
   render() {
@@ -71,9 +86,10 @@ export default createContainer(Node, {
       return Relay.QL`
         fragment on Patient {
           ${Jumbotron.getFragment('node')},
-          ${Experience.getFragment('node')},
-          ${Education.getFragment('node')},
-          ${Skill.getFragment('node')}
+          ${Assessment.getFragment('node')},
+          ${Diagnosis.getFragment('node')},
+          ${Intervention.getFragment('node')}
+          ${Evaluation.getFragment('node')}
         }
       `;
     },
@@ -81,9 +97,10 @@ export default createContainer(Node, {
       return Relay.QL`
         fragment on Viewer {
           ${Jumbotron.getFragment('viewer')},
-          ${Experience.getFragment('viewer')},
-          ${Education.getFragment('viewer')},
-          ${Skill.getFragment('viewer')}
+          ${Assessment.getFragment('viewer')},
+          ${Diagnosis.getFragment('viewer')},
+          ${Intervention.getFragment('viewer')}
+          ${Evaluation.getFragment('viewer')}
         }
       `;
     }

@@ -30,112 +30,31 @@ import {
   passwordGenerate,
   isSignedinCheck,
   isTheUserCheck,
-  isCreatorCheck
+  isPatientCreatorCheck
 } from '../../functions'
 import {
-    viewerGet,
-    profileGet,
-    languageType,
-    interventionType,
-    assessmentType,
-    diagnosisType,
-    patientType,
-    userType,
-    patientType,
-    assessmentType,
-    diagnosisType,
-    interventionType,
-    evaluationType,
-    assessmentStandardType,
-    diagnosisStatusType,
-    viewerType
-} from '.././types'
+  viewerGet,
+  patientGet,
+  languageType,
+  interventionType,
+  assessmentType,
+  diagnosisType,
+  evaluationType,
+  patientType,
+  userType,    
+  assessmentStandardType,
+  diagnosisStatusType,
+  viewerType
+} from '../../types'
 
 
-export const PatientUpdateMutation = mutationWithClientMutationId({
-  name: 'PatientUpdate',
-  inputFields: {
-    id: {type: new GraphQLNonNull(GraphQLID)},
-    fullName: {type: new GraphQLNonNull(GraphQLString)},
-    title: {type: new GraphQLNonNull(GraphQLString)},
-    currentCompany: {type: new GraphQLNonNull(GraphQLString)},
-    diagnosisTitle: {type: new GraphQLNonNull(GraphQLString)},
-    country: {type: new GraphQLNonNull(GraphQLString)},
-    region: {type: new GraphQLNonNull(GraphQLString)}
-  },
-  outputFields: {
-    viewer: {
-      type: viewerType,
-      resolve() {
-        return viewerGet();
-      }
-    },
-    field: {
-      type: patientType,
-      resolve(node) {
-        return node;
-      }
-    }
-  },
-  mutateAndGetPayload(
-    {
-      id: patientGlobalId,
-      fullName,
-      title,
-      currentCompany,
-      diagnosisTitle,
-      country,
-      region
-    },
-    {db, req}
-  ) {
 
-    let err;
-    if ((err = inputPresentCheck({
-      fullName,
-      title,
-      currentCompany,
-      diagnosisTitle,
-      country,
-      region
-    }))) {
-      return new GraphQLError(err);
-    }
-    if ((err = isSignedinCheck(req))) {
-      return new GraphQLError(err);
-    }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
-      return new GraphQLError(err);
-    }
+import {ObjectID} from 'mongodb';
+//For PatientPictureUpdateMutation
+import fs from 'fs';
+import path from 'path';
 
-    const {id: patientLocalId} = fromGlobalId(patientGlobalId);
-
-    return new Promise((resolve) => {
-      return db.collection(patientCollectionName)
-        .findAndModify(
-          {_id: new ObjectID(patientLocalId)},
-          [],
-          ({
-            $set: {
-              fullName,
-              title,
-              currentCompany,
-              diagnosisTitle,
-              country,
-              region
-            }
-          }),
-          ({
-            new: true
-          }),
-          (err, {value: patient}) => {
-            return resolve(patient);
-          }
-        );
-    });
-  }
-});
-
+const patientCollectionName = 'patient';
 
 export const PatientPictureUpdateMutation = mutationWithClientMutationId({
   name: 'PatientPictureUpdate',
@@ -163,10 +82,11 @@ export const PatientPictureUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
-
+    console.log("local: ", patientLocalId)
+    console.log("global: ", patientGlobalId)
     const {id: patientLocalId} = fromGlobalId(patientGlobalId);
 
     return new Promise((resolve) => {
@@ -201,6 +121,91 @@ export const PatientPictureUpdateMutation = mutationWithClientMutationId({
     });
   }
 });
+
+export const PatientUpdateMutation = mutationWithClientMutationId({
+  name: 'PatientUpdate',
+  inputFields: {
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    fullName: {type: new GraphQLNonNull(GraphQLString)},
+    title: {type: new GraphQLNonNull(GraphQLString)},
+    currentCompany: {type: new GraphQLNonNull(GraphQLString)},
+    educationTitle: {type: new GraphQLNonNull(GraphQLString)},
+    country: {type: new GraphQLNonNull(GraphQLString)},
+    region: {type: new GraphQLNonNull(GraphQLString)}
+  },
+  outputFields: {
+    viewer: {
+      type: viewerType,
+      resolve() {
+        return viewerGet();
+      }
+    },
+    field: {
+      type: patientType,
+      resolve(node) {
+        return node;
+      }
+    }
+  },
+  mutateAndGetPayload(
+    {
+      id: patientGlobalId,
+      fullName,
+      title,
+      currentCompany,
+      educationTitle,
+      country,
+      region
+    },
+    {db, req}
+  ) {
+
+    let err;
+    if ((err = inputPresentCheck({
+      fullName,
+      title,
+      currentCompany,
+      educationTitle,
+      country,
+      region
+    }))) {
+      return new GraphQLError(err);
+    }
+    if ((err = isSignedinCheck(req))) {
+      return new GraphQLError(err);
+    }
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
+      return new GraphQLError(err);
+    }
+
+    const {id: patientLocalId} = fromGlobalId(patientGlobalId);
+
+    return new Promise((resolve) => {
+      return db.collection(patientCollectionName)
+        .findAndModify(
+          {_id: new ObjectID(patientLocalId)},
+          [],
+          ({
+            $set: {
+              fullName,
+              title,
+              currentCompany,
+              educationTitle,
+              country,
+              region
+            }
+          }),
+          ({
+            new: true
+          }),
+          (err, {value: patient}) => {
+            return resolve(patient);
+          }
+        );
+    });
+  }
+});
+
 
 export const PatientAssessmentCreateMutation = mutationWithClientMutationId({
   name: 'PatientAssessmentCreate',
@@ -248,7 +253,7 @@ export const PatientAssessmentCreateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -344,7 +349,7 @@ export const PatientAssessmentUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -410,7 +415,7 @@ export const PatientAssessmentDeleteMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -475,7 +480,7 @@ export const PatientDiagnosisCreateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -549,7 +554,7 @@ export const PatientDiagnosisUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -611,7 +616,7 @@ export const PatientDiagnosisDeleteMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -687,7 +692,7 @@ export const PatientInterventionCreateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -783,7 +788,7 @@ export const PatientInterventionUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -849,7 +854,7 @@ export const PatientInterventionDeleteMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -926,7 +931,7 @@ export const PatientEvaluationCreateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -1022,7 +1027,7 @@ export const PatientEvaluationUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -1088,7 +1093,7 @@ export const PatientEvaluationDeleteMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(patientGlobalId, req.user._patientId))) {
+    if ((err = isPatientCreatorCheck(patientGlobalId, req.user._patientId))) {
       return new GraphQLError(err);
     }
 
@@ -1117,3 +1122,4 @@ export const PatientEvaluationDeleteMutation = mutationWithClientMutationId({
     });
   }
 });
+

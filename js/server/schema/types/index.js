@@ -20,39 +20,16 @@ import {
   connectionFromPromisedArray,
   mutationWithClientMutationId
 } from 'graphql-relay';
-
-
 import {
   entityGet,
-  promisedArrayGet,
-  inputPresentCheck,
-  emailValidCheck,
-  entityCountGet,
-  userUniqueCheck,
-  userRegisteredCheck,
-  passwordHash,
-  passwordGenerate,
-  isSignedinCheck,
-  isTheUserCheck,
-  isCreatorCheck
+  promisedArrayGet,  
 } from '../functions'
 
-
-
 import {ObjectID} from 'mongodb';
-import passport from 'passport';
-import emailValidator from 'email-validator';
-import bcryptjs from 'bcryptjs';
-import passwordGenerator from 'password-generator';
-import fs from 'fs';
-import path from 'path';
 
-//import {userCrudMailSend} from '../mailer';
-
-let _db;
 export const profileCollectionName = 'profile';
+export const patientCollectionName = 'patient';
 export const userCollectionName = 'user';
-
 
 class Viewer extends Object {}
 export const viewerGet = () => {
@@ -66,11 +43,24 @@ export const viewerGet = () => {
 
 class Profile extends Object {}
 export const profileGet = (profileLocalId) => {
+  console.log("profileGet:", profileLocalId)
   return entityGet(profileLocalId, profileCollectionName, _db)
     .then((profile) => {
       return Object.assign(
         new Profile(),
         profile
+      );
+    });
+};
+
+class Patient extends Object {}
+export const patientGet = (patientLocalId) => {
+  console.log("patientGet:", patientLocalId)
+  return entityGet(patientLocalId, patientCollectionName, _db)
+    .then((patient) => {
+      return Object.assign(
+        new Patient(),
+        patient
       );
     });
 };
@@ -81,12 +71,15 @@ export const {
 } = nodeDefinitions(
   (globalId) => {
     const {id: localId, type} = fromGlobalId(globalId);
-
+    console.log("node global id:", globalId)
+    console.log("node local id:", localId)
     switch (type) {
       case 'Viewer':
         return viewerGet(localId);
       case 'Profile':
         return profileGet(localId);
+      case 'Patient':
+        return patientGet(localId);
       default:
         return null;
     }
@@ -97,16 +90,15 @@ export const {
         return viewerType;
       case (obj instanceof Profile):
         return profileType;
+      case (obj instanceof Patient):
+        return patientType;
       default:
         return null;
     }
   }
 );
 
-
-
-
-
+//Start types--------------------------------------------------------------
 export const languageType = new GraphQLObjectType({
   name: 'Language',
   fields() {
@@ -200,27 +192,6 @@ export const {
   nodeType: profileType
 });
 
-export const userType = new GraphQLObjectType({
-  name: 'User',
-  fields() {
-    return {
-      id: globalIdField('User', ({_id: userLocalId}) => {
-        return userLocalId;
-      }),
-      _id: {type: GraphQLID},
-      email: {type: GraphQLString},
-      password: {type: GraphQLString},
-      profileId: globalIdField('Profile', ({_profileId: profileLocalId}) => {
-        return profileLocalId;
-      }),
-      _profileId: {type: GraphQLID}
-    };
-  }
-});
-
-
-
-
 
 export const assessmentType = new GraphQLObjectType({
   name: 'Assessment',
@@ -245,7 +216,11 @@ export const assessmentType = new GraphQLObjectType({
       standard: {
           type: new GraphQLList(assessmentStandardType),
           description: 'Establishes whether value is higher, normal or lower than goal'
-      }
+      },
+      major: {type: GraphQLString},
+      date: {type: GraphQLString},
+      degree: {type: GraphQLString},
+      title: {type: GraphQLString}
     };
   }
 });
@@ -278,6 +253,18 @@ export const diagnosisType = new GraphQLObjectType({
           type: GraphQLString, 
           description: ''
       },
+      major: {type: GraphQLString},
+      date: {type: GraphQLString},
+      degree: {type: GraphQLString},
+      title: {type: GraphQLString},
+      company: {type: GraphQLString},
+      description: {type: GraphQLString},
+      country: {type: GraphQLString},
+      region: {type: GraphQLString},
+      location: {type: GraphQLString},
+      since: {type: GraphQLString},
+      title: {type: GraphQLString},
+      until: {type: GraphQLString}
     };
   }
 });
@@ -303,6 +290,18 @@ export const interventionType = new GraphQLObjectType({
           type: GraphQLString,
           description: ''
       },
+      major: {type: GraphQLString},
+      date: {type: GraphQLString},
+      degree: {type: GraphQLString},
+      title: {type: GraphQLString},
+      company: {type: GraphQLString},
+      description: {type: GraphQLString},
+      country: {type: GraphQLString},
+      region: {type: GraphQLString},
+      location: {type: GraphQLString},
+      since: {type: GraphQLString},
+      title: {type: GraphQLString},
+      until: {type: GraphQLString}
     };
   }
 });
@@ -323,13 +322,25 @@ export const evaluationType = new GraphQLObjectType({
       monitoring: {
           type: new GraphQLList(assessmentType),
           description: ''
-      },  
+      },
+      major: {type: GraphQLString},
+      date: {type: GraphQLString},
+      degree: {type: GraphQLString},
+      title: {type: GraphQLString},
+      company: {type: GraphQLString},
+      description: {type: GraphQLString},
+      country: {type: GraphQLString},
+      region: {type: GraphQLString},
+      location: {type: GraphQLString},
+      since: {type: GraphQLString},
+      title: {type: GraphQLString},
+      until: {type: GraphQLString}  
     };
   }
 });
 
 
-var assessmentStandardType = new GraphQLEnumType({
+export const assessmentStandardType = new GraphQLEnumType({
   name: 'AssessmentStandard',
   values: {
     HIGH: { 
@@ -447,20 +458,12 @@ export const ncptType = new GraphQLObjectType({
 export const patientType = new GraphQLObjectType({
   name: 'Patient',
   fields() {
-    return {
+    return {     
       id: globalIdField('Patient', ({_id: patientLocalId}) => {
         return patientLocalId;
       }),
-      _id: {type: GraphQLID},
-      fullName: {type: GraphQLString},
-      industry: {type: GraphQLString},
-     // title: {type: GraphQLString},
-    //   patientPicture: {type: GraphQLString},
-    //   currentCompany: {type: GraphQLString},
-    //   educationTitle: {type: GraphQLString},
-    //   country: {type: GraphQLString},
-    //   region: {type: GraphQLString},
-      assessment: {
+      _id: {type: GraphQLID},      
+      assessments: {
           type: new GraphQLList(assessmentType),
           description: ''
       },
@@ -468,15 +471,27 @@ export const patientType = new GraphQLObjectType({
           type: new GraphQLList(diagnosisType), 
           description: ''
       },
-      intervention: {
+      interventions: {
           type: new GraphQLList(interventionType),
           description: ''
       },
-      evaluation: {
+      evaluations: {
           type: new GraphQLList(evaluationType),
           description: ''
       },
-    //educations: {type: new GraphQLList(educationType)},      
+      fullName: {type: GraphQLString},
+      industry: {type: GraphQLString},
+      languages: {type: new GraphQLList(languageType)},
+      previousCompanies: {type: new GraphQLList(GraphQLString)},
+      patientPicture: {type: GraphQLString},
+      skills: {type: new GraphQLList(skillType)},
+      title: {type: GraphQLString},
+      experiences: {type: new GraphQLList(experienceType)},
+      educations: {type: new GraphQLList(educationType)},
+      currentCompany: {type: GraphQLString},
+      educationTitle: {type: GraphQLString},
+      country: {type: GraphQLString},
+      region: {type: GraphQLString}
     };
   },
   interfaces: [nodeInterface]
@@ -492,13 +507,36 @@ export const {
 
 
 
+export const userType = new GraphQLObjectType({
+  name: 'User',
+  fields() {
+    return {
+      id: globalIdField('User', ({_id: userLocalId}) => {
+        return userLocalId;
+      }),
+      _id: {type: GraphQLID},
+      email: {type: GraphQLString},
+      password: {type: GraphQLString},
+      profileId: globalIdField('Profile', ({_profileId: profileLocalId}) => {
+        return profileLocalId;
+      }),
+      _profileId: {type: GraphQLID},
+      patientId: globalIdField('Patient', ({_patientd: patientLocalId}) => {
+        return patientLocalId;
+      }),
+      _patientId: {type: GraphQLID}
+    };
+  }
+});
 
 
 export const viewerType = new GraphQLObjectType({
   name: 'Viewer',
   fields() {
     return {
+
       id: globalIdField('Viewer', ({_id: viewerLocalId}) => {
+        console.log("viewer local id:", viewerLocalId)
         return viewerLocalId;
       }),
       _id: {type: GraphQLID},
@@ -518,7 +556,7 @@ export const viewerType = new GraphQLObjectType({
         resolve(parent, {id: profileGlobalId, searchTerm, ...connectionArgs}, {db}) {
           const query = (() => {
             const q = {};
-
+            console.log("profile server global id:", profileGlobalId)
             if (profileGlobalId) {
               const {id: profileLocalId} = fromGlobalId(profileGlobalId);
 
@@ -550,6 +588,54 @@ export const viewerType = new GraphQLObjectType({
               sort,
               limit,
               profileCollectionName,
+              db
+            ),
+            connectionArgs
+          );
+        }
+      },
+      patient: {
+        type: patientConnectionType,
+        args: {
+          id: {type: GraphQLID},
+          searchTerm: {type: GraphQLString},
+          ...connectionArgs
+        },
+        resolve(parent, {id: patientGlobalId, searchTerm, ...connectionArgs}, {db}) {
+          const query = (() => {
+            const q = {};
+            console.log("patient server global id:", patientGlobalId)
+            if (patientGlobalId) {
+              const {id: patientLocalId} = fromGlobalId(patientGlobalId);
+
+              Object.assign(
+                q,
+                {_id: new ObjectID(patientLocalId)}
+              );
+            }
+
+            if (searchTerm) {
+              Object.assign(
+                q,
+                {
+                  $text: {
+                    $search: `\"${searchTerm}\"`
+                  }
+                }
+              );
+            }
+
+            return q;
+          })();
+          const sort = {_id: -1};
+          const limit = 0;
+
+          return connectionFromPromisedArray(
+            promisedArrayGet(
+              query,
+              sort,
+              limit,
+              patientCollectionName,
               db
             ),
             connectionArgs

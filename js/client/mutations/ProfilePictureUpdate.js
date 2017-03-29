@@ -22,7 +22,7 @@ export default class ProfilePictureUpdateMutation extends Mutation {
   getMutation() {
     return Relay.QL`
       mutation {
-        patientPictureUpdate
+        profilePictureUpdate
       }
     `;
   }

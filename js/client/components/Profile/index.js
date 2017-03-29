@@ -8,6 +8,7 @@ import Detail from './Detail';
 
 class Profile extends Component {
   render() {
+    //console.log("profile children:",this.props.children)
     return (
       <div className = 'Profile'>
         {

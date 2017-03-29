@@ -25,13 +25,13 @@ class Text extends Component {
   onUpdateTriggerHandle = () => {
     this.setState({updateTriggered: true});
   };
-  onProfileUpdateSuccessHandle = () => {
+  onPatientUpdateSuccessHandle = () => {
     this.setState({
       updateRequired: false,
       updateTriggered: false
     });
   };
-  onProfileUpdateCancelHandle = () => {
+  onPatientUpdateCancelHandle = () => {
     this.setState({
       updateTriggered: false
     });
@@ -44,8 +44,8 @@ class Text extends Component {
         viewer = {this.props.viewer}
         updateRequired = {this.state.updateRequired}
         updateTriggered = {this.state.updateTriggered}
-        onProfileUpdateSuccess = {this.onProfileUpdateSuccessHandle}
-        onProfileUpdateCancel = {this.onProfileUpdateCancelHandle}
+        onPatientUpdateSuccess = {this.onPatientUpdateSuccessHandle}
+        onPatientUpdateCancel = {this.onPatientUpdateCancelHandle}
       /> :
       <Display
         node = {this.props.node}
@@ -65,7 +65,7 @@ export default createContainer(Text, {
   fragments: {
     node() {
       return Relay.QL`
-        fragment on Profile {
+        fragment on Patient {
           fullName,
           title,
           currentCompany,

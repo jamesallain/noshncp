@@ -42,19 +42,19 @@ const dbConnect = (mongourl) => {
 };
 
 //Creating index for Profile
-const dbDropIndexes = (db) => {
+const dbProfileDropIndexes = (db) => {
   return new Promise((resolve) => {
     return db.collection(profileCollectionName)
       .dropIndexes(
         () => {
-          console.log('dbDropIndexes');
+          console.log('dbProfileDropIndexes');
           return resolve(null);
         }
       );
   });
 };
 
-const dbCreateIndex = (db) => {
+const dbProfileCreateIndex = (db) => {
   return new Promise((resolve) => {
     return db.collection(profileCollectionName)
       .ensureIndex(
@@ -67,13 +67,45 @@ const dbCreateIndex = (db) => {
           'language_override': 'en'
         }),
         () => {
-          console.log('dbCreateIndex');
+          console.log('dbProfileCreateIndex');
           return resolve(null);
         }
       );
   });
 };
 
+//Creating index for Patient
+const dbPatientDropIndexes = (db) => {
+  return new Promise((resolve) => {
+    return db.collection(patientCollectionName)
+      .dropIndexes(
+        () => {
+          console.log('dbPatientDropIndexes');
+          return resolve(null);
+        }
+      );
+  });
+};
+
+const dbPatientCreateIndex = (db) => {
+  return new Promise((resolve) => {
+    return db.collection(patientCollectionName)
+      .ensureIndex(
+        ({
+          '$**': 'text'
+        }),
+        ({
+          name: 'patient_full_text',
+          'default_language': 'en',
+          'language_override': 'en'
+        }),
+        () => {
+          console.log('dbPatientCreateIndex');
+          return resolve(null);
+        }
+      );
+  });
+};
 
 //Creating Graphql schema
 const schemaUpdate = (db) => {
@@ -160,8 +192,10 @@ const passportLocalStrategyEnable = (db) => {
 
 (async () => {
   const db = await dbConnect(mongourl);
-  await dbDropIndexes(db);
-  await dbCreateIndex(db);
+  await dbProfileDropIndexes(db);
+  await dbProfileCreateIndex(db);
+  await dbPatientDropIndexes(db);
+  await dbPatientCreateIndex(db);
   await schemaUpdate(db);
   passportUserSerializeDeserialize(db);
   passportLocalStrategyEnable(db);

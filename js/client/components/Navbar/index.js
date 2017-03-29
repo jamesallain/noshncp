@@ -8,9 +8,9 @@ import Auth from './Auth';
 
 class Navbar extends Component {
   state = {};
-  onSearchTermSubmit = (evnt) => {
-    evnt.preventDefault();
-    evnt.stopPropagation();
+  onSearchTermSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
     browserHistory.push('/');
     setTimeout(() => {

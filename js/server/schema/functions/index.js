@@ -138,10 +138,21 @@ export const isTheUserCheck = (userGlobalId, _userId) => {
     null;
 };
 
-export const isCreatorCheck = (profileGlobalId, _profileId) => {
+export const isProfileCreatorCheck = (profileGlobalId, _profileId) => {
   const {id: profileLocalId} = fromGlobalId(profileGlobalId);
 
   return (profileLocalId.toString() !== _profileId.toString()) ?
+    ({
+      message: 'not authorised',
+      source: 'auth'
+    }) :
+    null;
+};
+
+export const isPatientCreatorCheck = (patientGlobalId, _patientId) => {
+  const {id: patientLocalId} = fromGlobalId(patientGlobalId);
+
+  return (patientLocalId.toString() !== _patientId.toString()) ?
     ({
       message: 'not authorised',
       source: 'auth'

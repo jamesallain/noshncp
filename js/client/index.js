@@ -21,6 +21,9 @@ import Viewer from 'components';
 import Profile from 'components/Profile';
 import ProfileEdges from 'components/Profile/Edges';
 import ProfileDetail from 'components/Profile/Detail';
+import Patient from 'components/Patient';
+import PatientEdges from 'components/Patient/Edges';
+import PatientDetail from 'components/Patient/Detail';
 import Auth from 'components/Auth';
 
 const protocol = window.location.protocol;
@@ -38,6 +41,7 @@ Relay.injectNetworkLayer(
 );
 
 const RootQueries = {
+
   viewer() {
     return Relay.QL`
       query {
@@ -48,6 +52,7 @@ const RootQueries = {
 };
 
 render(
+
   <Router
     history = {browserHistory}
     render = {applyRouterMiddleware(useRelay)}
@@ -77,8 +82,41 @@ render(
           path = ':id'
           component = {ProfileDetail}
         />
+      </Route>   
+
+      <Route
+        path = 'Patient'
+        component = {Patient}
+      >
+        <IndexRedirect to = 'Edges'/>
+        <Route
+          path = 'Edges'
+          component = {PatientEdges}
+        />
+        <Route
+          path = ':id'
+          component = {PatientDetail}
+        />
       </Route>
+
     </Route>
   </Router>,
   document.getElementById('viewer')
 );
+
+
+        /*<IndexRedirect to = 'Patient'/>
+        <Route
+          path = 'Patient'
+          component = {Patient}
+        >
+        <IndexRedirect to = 'Edges'/>
+        <Route
+          path = 'Edges'
+          component = {PatientEdges}
+        />
+        <Route
+          path = ':id'
+          component = {PatientDetail}
+        />
+        </Route>*/

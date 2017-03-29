@@ -8,6 +8,7 @@ import Detail from './Detail';
 
 class Patient extends Component {
   render() {
+    console.log("patient children:",this.props.children)
     return (
       <div className = 'Patient'>
         {

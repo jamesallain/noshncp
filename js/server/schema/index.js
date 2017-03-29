@@ -18,86 +18,52 @@ import {
   connectionFromPromisedArray,
   mutationWithClientMutationId
 } from 'graphql-relay';
-import {
-  entityGet,
-  promisedArrayGet,
-  inputPresentCheck,
-  emailValidCheck,
-  entityCountGet,
-  userUniqueCheck,
-  userRegisteredCheck,
-  passwordHash,
-  passwordGenerate,
-  isSignedinCheck,
-  isTheUserCheck,
-  isCreatorCheck
-} from './functions'
 import {      
-      ProfileUpdateMutation,
-      ProfileExperienceCreateMutation,
-      ProfileExperienceUpdateMutation,
-      ProfileExperienceDeleteMutation,
-      ProfileEducationCreateMutation,
-      ProfileEducationUpdateMutation,
-      ProfileEducationDeleteMutation,
-      ProfileSkillCreateMutation,
-      ProfileSkillUpdateMutation,
-      ProfileSkillDeleteMutation,
-      ProfilePictureUpdateMutation
+  PatientUpdateMutation,
+  PatientAssessmentCreateMutation,
+  PatientAssessmentUpdateMutation,
+  PatientAssessmentDeleteMutation,
+  PatientDiagnosisCreateMutation,
+  PatientDiagnosisUpdateMutation,
+  PatientDiagnosisDeleteMutation,
+  PatientInterventionCreateMutation,
+  PatientInterventionUpdateMutation,
+  PatientInterventionDeleteMutation,
+  PatientEvaluationCreateMutation,
+  PatientEvaluationUpdateMutation,
+  PatientEvaluationDeleteMutation,
+  PatientPictureUpdateMutation
+} from './mutations/patient'
+import {      
+  ProfileUpdateMutation,
+  ProfileExperienceCreateMutation,
+  ProfileExperienceUpdateMutation,
+  ProfileExperienceDeleteMutation,
+  ProfileEducationCreateMutation,
+  ProfileEducationUpdateMutation,
+  ProfileEducationDeleteMutation,
+  ProfileSkillCreateMutation,
+  ProfileSkillUpdateMutation,
+  ProfileSkillDeleteMutation,
+  ProfilePictureUpdateMutation
 } from './mutations/profile'
 import {
-      UserCreateMutation,
-      UserUpdateMutation,
-      UserDeleteMutation,
-      UserSigninMutation,
-      UserSignoutMutation,
-      UserPasswordResetMutation,      
+  UserCreateMutation,
+  UserUpdateMutation,
+  UserDeleteMutation,
+  UserSigninMutation,
+  UserSignoutMutation,
+  UserPasswordResetMutation,      
 } from './mutations/user'
 import {
-    viewerGet,
-    profileGet,
-    nodeInterface,
-    nodeField,
-    languageType,
-    skillType,
-    experienceType,
-    educationType,
-    profileType,
-    userType,
-    patientType,
-    assessmentType,
-    diagnosisType,
-    interventionType,
-    evaluationType,
-    assessmentStandardType,
-    diagnosisStatusType,
-    viewerType
+  viewerGet,
+  profileGet,
+  nodeInterface,
+  nodeField,  
+  viewerType
 } from './types'
 
-// import {
-//     Viewer,
-//     Profile,
-//     viewerGet,
-//     profileGet,
-//     nodeInterface,
-//     nodeField
-// } from './node'
-
-
-import {ObjectID} from 'mongodb';
-import passport from 'passport';
-import emailValidator from 'email-validator';
-import bcryptjs from 'bcryptjs';
-import passwordGenerator from 'password-generator';
-import fs from 'fs';
-import path from 'path';
-
-import {userCrudMailSend} from '../mailer';
-
 let _db;
-const profileCollectionName = 'profile';
-const userCollectionName = 'user';
-
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
@@ -134,7 +100,22 @@ const mutationType = new GraphQLObjectType({
       profileSkillCreate: ProfileSkillCreateMutation,
       profileSkillUpdate: ProfileSkillUpdateMutation,
       profileSkillDelete: ProfileSkillDeleteMutation,
-      profilePictureUpdate: ProfilePictureUpdateMutation
+      profilePictureUpdate: ProfilePictureUpdateMutation,
+      
+      patientUpdate: PatientUpdateMutation,
+      patientAssessmentCreate: PatientAssessmentCreateMutation,
+      patientAssessmentUpdate: PatientAssessmentUpdateMutation,
+      patientAssessmentDelete: PatientAssessmentDeleteMutation,
+      patientDiagnosisCreate: PatientDiagnosisCreateMutation,
+      patientDiagnosisUpdate: PatientDiagnosisUpdateMutation,
+      patientDiagnosisDelete: PatientDiagnosisDeleteMutation,
+      patientInterventionCreate: PatientInterventionCreateMutation,
+      patientInterventionUpdate: PatientInterventionUpdateMutation,
+      patientInterventionDelete: PatientInterventionDeleteMutation,
+      patientEvaluationCreate: PatientEvaluationCreateMutation,
+      patientEvaluationUpdate: PatientEvaluationUpdateMutation,
+      patientEvaluationDelete: PatientEvaluationDeleteMutation,
+      patientPictureUpdate: PatientPictureUpdateMutation
     };
   }
 });

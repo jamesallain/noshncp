@@ -3,13 +3,13 @@
 import React, {Component} from 'react';
 import Relay, {createContainer} from 'react-relay';
 
-import ProfilePicture from './ProfilePicture';
+import PatientPicture from './PatientPicture';
 import Text from './Text';
 
 class Jumbotron extends Component {
-  profilePictureRender() {
+  patientPictureRender() {
     return (
-      <ProfilePicture
+      <PatientPicture
         node = {this.props.node}
         viewer = {this.props.viewer}
       />
@@ -27,7 +27,7 @@ class Jumbotron extends Component {
   render() {
     return (
       <div className = 'Jumbotron jumbotron'>
-        {this.profilePictureRender()}
+        {this.patientPictureRender()}
         <br/>
         {this.textRender()}
       </div>
@@ -39,8 +39,8 @@ export default createContainer(Jumbotron, {
   fragments: {
     node() {
       return Relay.QL`
-        fragment on Profile {
-          ${ProfilePicture.getFragment('node')},
+        fragment on Patient {
+          ${PatientPicture.getFragment('node')},
           ${Text.getFragment('node')}
         }
       `;
@@ -49,7 +49,7 @@ export default createContainer(Jumbotron, {
       return Relay.QL`
         fragment on Viewer {
           ${Text.getFragment('viewer')},
-          ${ProfilePicture.getFragment('viewer')}
+          ${PatientPicture.getFragment('viewer')}
         }
       `;
     }

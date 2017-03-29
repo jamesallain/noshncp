@@ -30,7 +30,7 @@ export default createContainer(Display, {
   fragments: {
     node() {
       return Relay.QL`
-        fragment on Profile {
+        fragment on Patient {
           fullName,
           title,
           currentCompany,

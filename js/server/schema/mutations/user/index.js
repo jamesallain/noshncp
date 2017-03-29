@@ -19,53 +19,33 @@ import {
   mutationWithClientMutationId
 } from 'graphql-relay';
 import {
-  entityGet,
-  promisedArrayGet,
   inputPresentCheck,
   emailValidCheck,
-  entityCountGet,
   userUniqueCheck,
   userRegisteredCheck,
   passwordHash,
   passwordGenerate,
   isSignedinCheck,
   isTheUserCheck,
-  isCreatorCheck
+  isProfileCreatorCheck
 } from '../../functions'
 import {
     viewerGet,
-    profileGet,
-    languageType,
-    skillType,
-    experienceType,
-    educationType,
-    profileType,
-    userType,
-    patientType,
-    assessmentType,
-    diagnosisType,
-    interventionType,
-    evaluationType,
-    assessmentStandardType,
-    diagnosisStatusType,
+    userType,   
     viewerType
 } from '../../types'
 
 import {userCrudMailSend} from '../../../mailer';
-
 
 import {ObjectID} from 'mongodb';
 import passport from 'passport';
 import emailValidator from 'email-validator';
 import bcryptjs from 'bcryptjs';
 import passwordGenerator from 'password-generator';
-import fs from 'fs';
-import path from 'path';
 
-let _db;
+const patientCollectionName = 'patient';
 const profileCollectionName = 'profile';
 const userCollectionName = 'user';
-
 
 export const UserCreateMutation = mutationWithClientMutationId({
   name: 'UserCreate',
@@ -101,6 +81,7 @@ export const UserCreateMutation = mutationWithClientMutationId({
     }
 
     const _profileId = new ObjectID();
+    const _patientId = new ObjectID();
 
     return new Promise((resolve) => {
       return db.collection(profileCollectionName)
@@ -134,6 +115,41 @@ export const UserCreateMutation = mutationWithClientMutationId({
         );
     })
 
+    .then(()=>{
+      return new Promise((resolve) => {
+       return db.collection(patientCollectionName)
+        .findAndModify(
+          {_id: _patientId},
+          [],
+          ({
+            $set: {
+              fullName: null,
+              industry: null,
+              languages: [],
+              previousCompanies: [],
+              patientPicture: null,
+              skills: [],
+              title: null,
+              experiences: [],
+              educations: [],
+              currentCompany: null,
+              educationTitle: null,
+              country: null,
+              region: null
+            }
+          }),
+          ({
+            upsert: true,
+            new: true
+          }),
+          (err, {value: patient}) => {
+            return resolve(patient);
+          }
+        );
+      });
+    })   
+
+
     .then(() => {
       return new Promise((resolve) => {
         return db.collection(userCollectionName)
@@ -144,7 +160,8 @@ export const UserCreateMutation = mutationWithClientMutationId({
               $set: {
                 email,
                 password: passwordHash(password),
-                _profileId
+                _profileId,
+                _patientId
               }
             }),
             ({

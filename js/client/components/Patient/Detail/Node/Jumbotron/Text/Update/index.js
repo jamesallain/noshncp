@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import Relay, {createContainer} from 'react-relay';
 import {CountryDropdown, RegionDropdown} from 'react-country-region-selector';
 
-import ProfileUpdateMutation from 'mutations/ProfileUpdate';
+import PatientUpdateMutation from 'mutations/PatientUpdate';
 
 class Update extends Component {
   state = {
@@ -27,7 +27,7 @@ class Update extends Component {
     this.setState({region});
   };
   errShow = (err) => {
-    $(this.refs.profileUpdate)
+    $(this.refs.patientUpdate)
       .find('.form-group')
       .toArray()
       .reduce((memo, el) => {
@@ -62,9 +62,9 @@ class Update extends Component {
 
       }, []);
   };
-  profileUpdate = () => {
+  patientUpdate = () => {
     this.props.relay.commitUpdate(
-      new ProfileUpdateMutation({
+      new PatientUpdateMutation({
         fullName: this.state.fullName.trim(),
         title: this.state.title.trim(),
         currentCompany: this.state.currentCompany.trim(),
@@ -80,19 +80,19 @@ class Update extends Component {
           this.errShow(err);
         },
         onSuccess: () => {
-          this.props.onProfileUpdateSuccess();
+          this.props.onPatientUpdateSuccess();
         }
       }
     );
   };
   errClear = () => {
-    $(this.refs.profileUpdate)
+    $(this.refs.patientUpdate)
       .find('.form-group')
       .removeClass('has-danger')
       .find('.form-control-feedback')
       .text('');
 
-    $(this.refs.profileUpdate)
+    $(this.refs.patientUpdate)
       .find('.btn-danger')
       .removeClass('btn-danger');
   };
@@ -102,18 +102,18 @@ class Update extends Component {
 
     this.errClear();
 
-    this.profileUpdate();
+    this.patientUpdate();
   };
   onCancelHandle = (evnt) => {
     evnt.preventDefault();
     evnt.stopPropagation();
 
-    this.props.onProfileUpdateCancel();
+    this.props.onPatientUpdateCancel();
   };
   formRender() {
     return (
       <form
-        ref = 'profileUpdate'
+        ref = 'patientUpdate'
         onSubmit = {this.onSubmitHandle}
       >
         <div
@@ -237,21 +237,21 @@ export default createContainer(Update, {
   fragments: {
     node() {
       return Relay.QL`
-        fragment on Profile {
+        fragment on Patient {
           fullName,
           title,
           currentCompany,
           educationTitle,
           country,
           region
-          ${ProfileUpdateMutation.getFragment('node')}
+          ${PatientUpdateMutation.getFragment('node')}
         }
       `;
     },
     viewer() {
       return Relay.QL`
         fragment on Viewer {
-          ${ProfileUpdateMutation.getFragment('viewer')}
+          ${PatientUpdateMutation.getFragment('viewer')}
         }
       `;
     }

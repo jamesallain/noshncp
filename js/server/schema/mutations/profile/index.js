@@ -18,53 +18,24 @@ import {
   connectionFromPromisedArray,
   mutationWithClientMutationId
 } from 'graphql-relay';
-import {
-  entityGet,
-  promisedArrayGet,
-  inputPresentCheck,
-  emailValidCheck,
-  entityCountGet,
-  userUniqueCheck,
-  userRegisteredCheck,
-  passwordHash,
-  passwordGenerate,
+import {  
+  inputPresentCheck,  
   isSignedinCheck,
-  isTheUserCheck,
-  isCreatorCheck
+  isProfileCreatorCheck
 } from '../../functions'
 import {
     viewerGet,
-    profileGet,
-    languageType,
-    skillType,
-    experienceType,
-    educationType,
-    profileType,
-    userType,
-    patientType,
-    assessmentType,
-    diagnosisType,
-    interventionType,
-    evaluationType,
-    assessmentStandardType,
-    diagnosisStatusType,
+    profileGet, 
+    profileType,   
     viewerType
 } from '../../types'
 
-
 import {ObjectID} from 'mongodb';
-import passport from 'passport';
-import emailValidator from 'email-validator';
-import bcryptjs from 'bcryptjs';
-import passwordGenerator from 'password-generator';
+//For ProfilePictureUpdateMutation
 import fs from 'fs';
 import path from 'path';
 
-let _db;
 const profileCollectionName = 'profile';
-const userCollectionName = 'user';
-
-
 
 export const ProfileUpdateMutation = mutationWithClientMutationId({
   name: 'ProfileUpdate',
@@ -118,7 +89,7 @@ export const ProfileUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -196,7 +167,7 @@ export const ProfileExperienceCreateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -292,7 +263,7 @@ export const ProfileExperienceUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -358,7 +329,7 @@ export const ProfileExperienceDeleteMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -423,7 +394,7 @@ export const ProfileEducationCreateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -497,7 +468,7 @@ export const ProfileEducationUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -559,7 +530,7 @@ export const ProfileEducationDeleteMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -618,7 +589,7 @@ export const ProfileSkillCreateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -681,7 +652,7 @@ export const ProfileSkillUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -738,7 +709,7 @@ export const ProfileSkillDeleteMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
@@ -794,7 +765,7 @@ export const ProfilePictureUpdateMutation = mutationWithClientMutationId({
     if ((err = isSignedinCheck(req))) {
       return new GraphQLError(err);
     }
-    if ((err = isCreatorCheck(profileGlobalId, req.user._profileId))) {
+    if ((err = isProfileCreatorCheck(profileGlobalId, req.user._profileId))) {
       return new GraphQLError(err);
     }
 
