@@ -1,7 +1,6 @@
 'use strict';
 
 import {
-  GraphQLSchema,
   GraphQLObjectType,
   GraphQLID,
   GraphQLString,
@@ -9,13 +8,8 @@ import {
   GraphQLNonNull,
   GraphQLError
 } from 'graphql';
-import {
-  nodeDefinitions,
+import {  
   fromGlobalId,
-  globalIdField,
-  connectionDefinitions,
-  connectionArgs,
-  connectionFromPromisedArray,
   mutationWithClientMutationId
 } from 'graphql-relay';
 import {  

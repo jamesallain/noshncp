@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import Relay, {createContainer} from 'react-relay';
 
 import BootstrapDatepicker from 'components/BootstrapDatepicker';
-import PatientEvaluationCreateMutation from 'mutations/PatientEvaluationCreate';
+import EvaluationCreateMutation from 'mutations/EvaluationCreate';
 
 class Create extends Component {
   state = {
@@ -21,7 +21,7 @@ class Create extends Component {
     this.setState({date});
   };
   errShow = (err) => {
-    $(this.refs.patientEvaluationCreate)
+    $(this.refs.evaluationCreate)
       .find('.form-group')
       .toArray()
       .reduce((memo, el) => {
@@ -55,15 +55,15 @@ class Create extends Component {
       }, []);
   };
   errClear = () => {
-    $(this.refs.patientEvaluationCreate)
+    $(this.refs.evaluationCreate)
       .find('.form-group')
       .removeClass('has-danger')
       .find('.form-control-feedback')
       .text('');
   };
-  patientEvaluationCreate = () => {
+  evaluationCreate = () => {
     this.props.relay.commitUpdate(
-      new PatientEvaluationCreateMutation({
+      new EvaluationCreateMutation({
         date: this.state.date.trim(),
         degree: this.state.degree.trim(),
         title: this.state.title.trim(),
@@ -87,7 +87,7 @@ class Create extends Component {
 
     this.errClear();
 
-    this.patientEvaluationCreate();
+    this.evaluationCreate();
   };
   onCancelHandle = (evnt) => {
     evnt.preventDefault();
@@ -98,7 +98,7 @@ class Create extends Component {
   formRender() {
     return (
       <form
-        ref = 'patientEvaluationCreate'
+        ref = 'evaluationCreate'
         className = 'col-6 col-md-4'
         onSubmit = {this.onSubmitHandle}
       >
@@ -198,14 +198,14 @@ export default createContainer(Create, {
     node() {
       return Relay.QL`
         fragment on Patient {
-          ${PatientEvaluationCreateMutation.getFragment('node')}
+          ${EvaluationCreateMutation.getFragment('node')}
         }
       `;
     },
     viewer() {
       return Relay.QL`
         fragment on Viewer {
-          ${PatientEvaluationCreateMutation.getFragment('viewer')}
+          ${EvaluationCreateMutation.getFragment('viewer')}
         }
       `;
     }

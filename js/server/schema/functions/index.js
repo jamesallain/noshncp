@@ -150,6 +150,9 @@ export const isProfileCreatorCheck = (profileGlobalId, _profileId) => {
 };
 
 export const isPatientCreatorCheck = (patientGlobalId, _patientId) => {
+  console.log("isPatientCreatorCheck=patientGlobalId",patientGlobalId)
+  console.log("isPatientCreatorCheck=patientGlobalId",_patientId)
+
   const {id: patientLocalId} = fromGlobalId(patientGlobalId);
 
   return (patientLocalId.toString() !== _patientId.toString()) ?

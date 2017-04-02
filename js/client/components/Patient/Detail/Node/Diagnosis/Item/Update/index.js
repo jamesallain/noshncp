@@ -6,7 +6,7 @@ import {CountryDropdown, RegionDropdown} from 'react-country-region-selector';
 import autosize from 'autosize';
 
 import BootstrapDatepicker from 'components/BootstrapDatepicker';
-import PatientDiagnosisUpdateMutation from 'mutations/PatientDiagnosisUpdate';
+import DiagnosisUpdateMutation from 'mutations/DiagnosisUpdate';
 
 class Update extends Component {
   state = {
@@ -45,7 +45,7 @@ class Update extends Component {
     this.setState({until});
   };
   errShow = (err) => {
-    $(this.refs.patientDiagnosisUpdate)
+    $(this.refs.diagnosisUpdate)
       .find('.form-group')
       .toArray()
       .reduce((memo, el) => {
@@ -91,19 +91,19 @@ class Update extends Component {
       }, []);
   };
   errClear = () => {
-    $(this.refs.patientDiagnosisUpdate)
+    $(this.refs.diagnosisUpdate)
       .find('.form-group')
       .removeClass('has-danger');
-    $(this.refs.patientDiagnosisUpdate)
+    $(this.refs.diagnosisUpdate)
       .find('.form-control-feedback')
       .text('');
-    $(this.refs.patientDiagnosisUpdate)
+    $(this.refs.diagnosisUpdate)
       .find('.btn')
       .removeClass('btn-danger');
   };
-  patientDiagnosisUpdate = () => {
+  diagnosisUpdate = () => {
     this.props.relay.commitUpdate(
-      new PatientDiagnosisUpdateMutation({
+      new DiagnosisUpdateMutation({
         company: this.state.company.trim(),
         description: this.state.description.trim(),
         region: this.state.region.trim(),
@@ -132,7 +132,7 @@ class Update extends Component {
 
     this.errClear();
 
-    this.patientDiagnosisUpdate();
+    this.diagnosisUpdate();
   };
   onCancelHandle = (evnt) => {
     evnt.preventDefault();
@@ -143,7 +143,7 @@ class Update extends Component {
   formRender() {
     return (
       <form
-        ref = 'patientDiagnosisUpdate'
+        ref = 'diagnosisUpdate'
         className = 'col-md-8 offset-md-2'
         onSubmit = {this.onSubmitHandle}
       >
@@ -309,21 +309,21 @@ export default createContainer(Update, {
           since,
           title,
           until,
-          ${PatientDiagnosisUpdateMutation.getFragment('item')}
+          ${DiagnosisUpdateMutation.getFragment('item')}
         }
       `;
     },
     node() {
       return Relay.QL`
         fragment on Patient {
-          ${PatientDiagnosisUpdateMutation.getFragment('node')}
+          ${DiagnosisUpdateMutation.getFragment('node')}
         }
       `;
     },
     viewer() {
       return Relay.QL`
         fragment on Viewer {
-          ${PatientDiagnosisUpdateMutation.getFragment('viewer')}
+          ${DiagnosisUpdateMutation.getFragment('viewer')}
         }
       `;
     }

@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import Relay, {createContainer} from 'react-relay';
 
 import BootstrapDatepicker from 'components/BootstrapDatepicker';
-import PatientInterventionUpdateMutation from 'mutations/PatientInterventionUpdate';
+import InterventionUpdateMutation from 'mutations/InterventionUpdate';
 
 class Update extends Component {
   state = {
@@ -21,7 +21,7 @@ class Update extends Component {
     this.setState({date});
   };
   errShow = (err) => {
-    $(this.refs.patientInterventionUpdate)
+    $(this.refs.interventionUpdate)
       .find('.form-group')
       .toArray()
       .reduce((memo, el) => {
@@ -55,15 +55,15 @@ class Update extends Component {
       }, []);
   };
   errClear = () => {
-    $(this.refs.patientInterventionUpdate)
+    $(this.refs.interventionUpdate)
       .find('.form-group')
       .removeClass('has-danger')
       .find('.form-control-feedback')
       .text('');
   };
-  patientInterventionUpdate = () => {
+  interventionUpdate = () => {
     this.props.relay.commitUpdate(
-      new PatientInterventionUpdateMutation({
+      new InterventionUpdateMutation({
         date: this.state.date.trim(),
         degree: this.state.degree.trim(),
         title: this.state.title.trim(),
@@ -88,7 +88,7 @@ class Update extends Component {
 
     this.errClear();
 
-    this.patientInterventionUpdate();
+    this.interventionUpdate();
   };
   onCancelHandle = (evnt) => {
     evnt.preventDefault();
@@ -99,7 +99,7 @@ class Update extends Component {
   formRender() {
     return (
       <form
-        ref = 'patientInterventionUpdate'
+        ref = 'interventionUpdate'
         className = 'col-6 col-md-4'
         onSubmit = {this.onSubmitHandle}
       >
@@ -198,21 +198,21 @@ export default createContainer(Update, {
           date,
           degree,
           title,
-          ${PatientInterventionUpdateMutation.getFragment('item')}
+          ${InterventionUpdateMutation.getFragment('item')}
         }
       `;
     },
     node() {
       return Relay.QL`
         fragment on Patient {
-          ${PatientInterventionUpdateMutation.getFragment('node')}
+          ${InterventionUpdateMutation.getFragment('node')}
         }
       `;
     },
     viewer() {
       return Relay.QL`
         fragment on Viewer {
-          ${PatientInterventionUpdateMutation.getFragment('viewer')}
+          ${InterventionUpdateMutation.getFragment('viewer')}
         }
       `;
     }

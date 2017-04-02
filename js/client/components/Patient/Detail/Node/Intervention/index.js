@@ -7,7 +7,7 @@ import Item from './Item';
 import Controls from './Controls';
 import Create from './Create';
 
-class Education extends Component {
+class Intervention extends Component {
   state = {
     createRequired: createRequiredGet(this.props),
     createTriggered: false,
@@ -77,8 +77,8 @@ class Education extends Component {
   }
   render() {
     return (
-      <div className = 'Education'>
-        <h6>Education</h6>
+      <div className = 'Intervention'>
+        <h6>Intervention</h6>
 
         {
           (!!this.props.node.interventions.length) &&
@@ -93,7 +93,7 @@ class Education extends Component {
   }
 }
 
-export default createContainer(Education, {
+export default createContainer(Intervention, {
   fragments: {
     node() {
       return Relay.QL`

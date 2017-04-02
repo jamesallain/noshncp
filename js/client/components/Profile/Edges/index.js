@@ -13,6 +13,7 @@ class Edges extends Component {
     searchTermInput: null
   };
   componentDidMount() {
+    console.log("node:",this.props)
     this.variablesFirstSet(this.props);
 
     window.addEventListener('scroll', this.load);

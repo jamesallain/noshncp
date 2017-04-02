@@ -3,13 +3,13 @@
 import React, {Component} from 'react';
 import Relay, {createContainer} from 'react-relay';
 
-import PatientEvaluationDeleteMutation from 'mutations/PatientEvaluationDelete';
+import EvaluationDeleteMutation from 'mutations/EvaluationDelete';
 
 class Delete extends Component {
   state = {};
-  patientEvaluationDelete = () => {
+  evaluationDelete = () => {
     this.props.relay.commitUpdate(
-      new PatientEvaluationDeleteMutation({
+      new EvaluationDeleteMutation({
         item: this.props.item,
         node: this.props.node,
         viewer: this.props.viewer
@@ -17,7 +17,7 @@ class Delete extends Component {
     );
   };
   onClickHandle = () => {
-    this.patientEvaluationDelete();
+    this.evaluationDelete();
   };
   render() {
     return (
@@ -36,21 +36,21 @@ export default createContainer(Delete, {
     item() {
       return Relay.QL`
         fragment on Evaluation {
-          ${PatientEvaluationDeleteMutation.getFragment('item')}
+          ${EvaluationDeleteMutation.getFragment('item')}
         }
       `;
     },
     node() {
       return Relay.QL`
         fragment on Patient {
-          ${PatientEvaluationDeleteMutation.getFragment('node')}
+          ${EvaluationDeleteMutation.getFragment('node')}
         }
       `;
     },
     viewer() {
       return Relay.QL`
         fragment on Viewer {
-          ${PatientEvaluationDeleteMutation.getFragment('viewer')}
+          ${EvaluationDeleteMutation.getFragment('viewer')}
         }
       `;
     }

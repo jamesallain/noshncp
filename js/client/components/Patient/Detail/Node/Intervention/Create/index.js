@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import Relay, {createContainer} from 'react-relay';
 
 import BootstrapDatepicker from 'components/BootstrapDatepicker';
-import PatientInterventionCreateMutation from 'mutations/PatientInterventionCreate';
+import InterventionCreateMutation from 'mutations/InterventionCreate';
 
 class Create extends Component {
   state = {
@@ -21,7 +21,7 @@ class Create extends Component {
     this.setState({date});
   };
   errShow = (err) => {
-    $(this.refs.patientInterventionCreate)
+    $(this.refs.interventionCreate)
       .find('.form-group')
       .toArray()
       .reduce((memo, el) => {
@@ -55,15 +55,15 @@ class Create extends Component {
       }, []);
   };
   errClear = () => {
-    $(this.refs.patientInterventionCreate)
+    $(this.refs.interventionCreate)
       .find('.form-group')
       .removeClass('has-danger')
       .find('.form-control-feedback')
       .text('');
   };
-  patientInterventionCreate = () => {
+  interventionCreate = () => {
     this.props.relay.commitUpdate(
-      new PatientInterventionCreateMutation({
+      new InterventionCreateMutation({
         date: this.state.date.trim(),
         degree: this.state.degree.trim(),
         title: this.state.title.trim(),
@@ -87,7 +87,7 @@ class Create extends Component {
 
     this.errClear();
 
-    this.patientInterventionCreate();
+    this.interventionCreate();
   };
   onCancelHandle = (evnt) => {
     evnt.preventDefault();
@@ -98,7 +98,7 @@ class Create extends Component {
   formRender() {
     return (
       <form
-        ref = 'patientInterventionCreate'
+        ref = 'interventionCreate'
         className = 'col-6 col-md-4'
         onSubmit = {this.onSubmitHandle}
       >
@@ -198,14 +198,14 @@ export default createContainer(Create, {
     node() {
       return Relay.QL`
         fragment on Patient {
-          ${PatientInterventionCreateMutation.getFragment('node')}
+          ${InterventionCreateMutation.getFragment('node')}
         }
       `;
     },
     viewer() {
       return Relay.QL`
         fragment on Viewer {
-          ${PatientInterventionCreateMutation.getFragment('viewer')}
+          ${InterventionCreateMutation.getFragment('viewer')}
         }
       `;
     }

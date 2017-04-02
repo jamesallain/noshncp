@@ -2,38 +2,27 @@
 
 import {
   GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLID,
-  GraphQLString,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLError
+  GraphQLObjectType, 
 } from 'graphql';
-import {
-  nodeDefinitions,
-  fromGlobalId,
-  globalIdField,
-  connectionDefinitions,
-  connectionArgs,
-  connectionFromPromisedArray,
-  mutationWithClientMutationId
-} from 'graphql-relay';
-import {      
+import {  
+  PatientCreateMutation,    
   PatientUpdateMutation,
-  PatientAssessmentCreateMutation,
-  PatientAssessmentUpdateMutation,
-  PatientAssessmentDeleteMutation,
-  PatientDiagnosisCreateMutation,
-  PatientDiagnosisUpdateMutation,
-  PatientDiagnosisDeleteMutation,
-  PatientInterventionCreateMutation,
-  PatientInterventionUpdateMutation,
-  PatientInterventionDeleteMutation,
-  PatientEvaluationCreateMutation,
-  PatientEvaluationUpdateMutation,
-  PatientEvaluationDeleteMutation,
-  PatientPictureUpdateMutation
+  PatientPictureUpdateMutation,
 } from './mutations/patient'
+import {
+  AssessmentCreateMutation,
+  AssessmentUpdateMutation,
+  AssessmentDeleteMutation,
+  DiagnosisCreateMutation,
+  DiagnosisUpdateMutation,
+  DiagnosisDeleteMutation,
+  InterventionCreateMutation,
+  InterventionUpdateMutation,
+  InterventionDeleteMutation,
+  EvaluationCreateMutation,
+  EvaluationUpdateMutation,
+  EvaluationDeleteMutation,  
+} from './mutations/ncp'
 import {      
   ProfileUpdateMutation,
   ProfileExperienceCreateMutation,
@@ -57,8 +46,6 @@ import {
 } from './mutations/user'
 import {
   viewerGet,
-  profileGet,
-  nodeInterface,
   nodeField,  
   viewerType
 } from './types'
@@ -102,20 +89,21 @@ const mutationType = new GraphQLObjectType({
       profileSkillDelete: ProfileSkillDeleteMutation,
       profilePictureUpdate: ProfilePictureUpdateMutation,
       
+      patientCreate: PatientCreateMutation,
       patientUpdate: PatientUpdateMutation,
-      patientAssessmentCreate: PatientAssessmentCreateMutation,
-      patientAssessmentUpdate: PatientAssessmentUpdateMutation,
-      patientAssessmentDelete: PatientAssessmentDeleteMutation,
-      patientDiagnosisCreate: PatientDiagnosisCreateMutation,
-      patientDiagnosisUpdate: PatientDiagnosisUpdateMutation,
-      patientDiagnosisDelete: PatientDiagnosisDeleteMutation,
-      patientInterventionCreate: PatientInterventionCreateMutation,
-      patientInterventionUpdate: PatientInterventionUpdateMutation,
-      patientInterventionDelete: PatientInterventionDeleteMutation,
-      patientEvaluationCreate: PatientEvaluationCreateMutation,
-      patientEvaluationUpdate: PatientEvaluationUpdateMutation,
-      patientEvaluationDelete: PatientEvaluationDeleteMutation,
-      patientPictureUpdate: PatientPictureUpdateMutation
+      patientPictureUpdate: PatientPictureUpdateMutation,
+      assessmentCreate: AssessmentCreateMutation,
+      assessmentUpdate: AssessmentUpdateMutation,
+      assessmentDelete: AssessmentDeleteMutation,
+      diagnosisCreate: DiagnosisCreateMutation,
+      diagnosisUpdate: DiagnosisUpdateMutation,
+      diagnosisDelete: DiagnosisDeleteMutation,
+      interventionCreate: InterventionCreateMutation,
+      interventionUpdate: InterventionUpdateMutation,
+      interventionDelete: InterventionDeleteMutation,
+      evaluationCreate: EvaluationCreateMutation,
+      evaluationUpdate: EvaluationUpdateMutation,
+      evaluationDelete: EvaluationDeleteMutation,
     };
   }
 });

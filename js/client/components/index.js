@@ -7,6 +7,7 @@ import styles from './styles.css';
 import Navbar from './Navbar';
 import Patient from './Patient';
 import Profile from './Profile';
+
 import Auth from './Auth';
 import Footer from './Footer';
 
@@ -18,7 +19,7 @@ class Viewer extends Component {
     this.setState({searchTermInput});
   };
   render() {
-    console.log("component index children:",this.props.children)
+    console.log("component index children:++++++++++++++++++++++++++++++++++",this.props.children)
     return (
       <div
         className = {`${styles.Viewer}`}

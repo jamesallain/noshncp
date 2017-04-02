@@ -2,7 +2,7 @@
 
 import Relay, {Mutation} from 'react-relay';
 
-export default class PatientAssessmentDeleteMutation extends Mutation {
+export default class AssessmentDeleteMutation extends Mutation {
   static fragments = {
     item() {
       return Relay.QL`
@@ -29,7 +29,7 @@ export default class PatientAssessmentDeleteMutation extends Mutation {
   getMutation() {
     return Relay.QL`
       mutation {
-        patientAssessmentDelete
+        assessmentDelete
       }
     `;
   }
@@ -41,7 +41,7 @@ export default class PatientAssessmentDeleteMutation extends Mutation {
   }
   getFatQuery() {
     return Relay.QL`
-      fragment on PatientAssessmentDeletePayload @relay(pattern: true) {
+      fragment on AssessmentDeletePayload @relay(pattern: true) {
         viewer,
         field
       }

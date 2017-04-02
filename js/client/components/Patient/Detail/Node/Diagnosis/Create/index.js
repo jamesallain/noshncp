@@ -6,7 +6,7 @@ import {CountryDropdown, RegionDropdown} from 'react-country-region-selector';
 import autosize from 'autosize';
 
 import BootstrapDatepicker from 'components/BootstrapDatepicker';
-import PatientDiagnosisCreateMutation from 'mutations/PatientDiagnosisCreate';
+import DiagnosisCreateMutation from 'mutations/DiagnosisCreate';
 
 class Create extends Component {
   state = {
@@ -39,7 +39,7 @@ class Create extends Component {
     this.setState({until});
   };
   errShow = (err) => {
-    $(this.refs.patientDiagnosisCreate)
+    $(this.refs.diagnosisCreate)
       .find('.form-group')
       .toArray()
       .reduce((memo, el) => {
@@ -84,9 +84,9 @@ class Create extends Component {
         return memo;
       }, []);
   };
-  patientDiagnosisCreate = () => {
+  diagnosisCreate = () => {
     this.props.relay.commitUpdate(
-      new PatientDiagnosisCreateMutation({
+      new DiagnosisCreateMutation({
         company: this.state.company.trim(),
         title: this.state.title.trim(),
         country: this.state.country.trim(),
@@ -109,13 +109,13 @@ class Create extends Component {
     );
   };
   errClear = () => {
-    $(this.refs.patientDiagnosisCreate)
+    $(this.refs.diagnosisCreate)
       .find('.form-group')
       .removeClass('has-danger');
-    $(this.refs.patientDiagnosisCreate)
+    $(this.refs.diagnosisCreate)
       .find('.form-control-feedback')
       .text('');
-    $(this.refs.patientDiagnosisCreate)
+    $(this.refs.diagnosisCreate)
       .find('.btn')
       .removeClass('btn-danger');
   };
@@ -125,7 +125,7 @@ class Create extends Component {
 
     this.errClear();
 
-    this.patientDiagnosisCreate();
+    this.diagnosisCreate();
   };
   onCancelHandle = (evnt) => {
     evnt.preventDefault();
@@ -136,7 +136,7 @@ class Create extends Component {
   formRender() {
     return (
       <form
-        ref = 'patientDiagnosisCreate'
+        ref = 'diagnosisCreate'
         className = 'col-md-8 offset-md-2'
         onSubmit = {this.onSubmitHandle}
       >
@@ -298,14 +298,14 @@ export default createContainer(Create, {
     node() {
       return Relay.QL`
         fragment on Patient {
-          ${PatientDiagnosisCreateMutation.getFragment('node')}
+          ${DiagnosisCreateMutation.getFragment('node')}
         }
       `;
     },
     viewer() {
       return Relay.QL`
         fragment on Viewer {
-          ${PatientDiagnosisCreateMutation.getFragment('viewer')}
+          ${DiagnosisCreateMutation.getFragment('viewer')}
         }
       `;
     }

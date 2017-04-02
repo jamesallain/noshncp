@@ -5,6 +5,9 @@ import Relay, {createContainer} from 'react-relay';
 import {Link} from 'react-router';
 
 class Patient extends Component {
+
+  
+
   render() {
     return (
       <li className = 'nav-item'>

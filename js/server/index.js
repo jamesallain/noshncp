@@ -24,9 +24,10 @@ const nodeEnv = process.env.NODE_ENV;
 const mongourl = `${process.env.MONGODB_URL || process.env.MONGO_URL}vip`;
 
 //Setting Mongo collections
-const profileCollectionName = 'profile';
 const userCollectionName = 'user';
+const profileCollectionName = 'profile';
 const patientCollectionName = 'patient';
+const ncpCollectionName = 'ncp';
 
 //Connecting to Mongo
 const dbConnect = (mongourl) => {
@@ -106,6 +107,41 @@ const dbPatientCreateIndex = (db) => {
       );
   });
 };
+
+
+//Creating index for Ncp
+const dbNcpDropIndexes = (db) => {
+  return new Promise((resolve) => {
+    return db.collection(ncpCollectionName)
+      .dropIndexes(
+        () => {
+          console.log('dbNcpDropIndexes');
+          return resolve(null);
+        }
+      );
+  });
+};
+
+const dbNcpCreateIndex = (db) => {
+  return new Promise((resolve) => {
+    return db.collection(ncpCollectionName)
+      .ensureIndex(
+        ({
+          '$**': 'text'
+        }),
+        ({
+          name: 'ncp_full_text',
+          'default_language': 'en',
+          'language_override': 'en'
+        }),
+        () => {
+          console.log('dbNcpCreateIndex');
+          return resolve(null);
+        }
+      );
+  });
+};
+
 
 //Creating Graphql schema
 const schemaUpdate = (db) => {
@@ -192,10 +228,14 @@ const passportLocalStrategyEnable = (db) => {
 
 (async () => {
   const db = await dbConnect(mongourl);
+  
   await dbProfileDropIndexes(db);
   await dbProfileCreateIndex(db);
   await dbPatientDropIndexes(db);
   await dbPatientCreateIndex(db);
+  await dbNcpDropIndexes(db);
+  await dbNcpCreateIndex(db);
+
   await schemaUpdate(db);
   passportUserSerializeDeserialize(db);
   passportLocalStrategyEnable(db);

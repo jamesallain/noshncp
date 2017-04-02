@@ -42,7 +42,7 @@ class Node extends Component {
     return (
       <Intervention
         node = {this.props.node}
-       isCreator = {this.props.isCreator}
+        isCreator = {this.props.isCreator}
         viewer = {this.props.viewer}
       />
     );

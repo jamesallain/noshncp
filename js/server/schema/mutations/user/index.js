@@ -1,7 +1,6 @@
 'use strict';
 
-import {
-  GraphQLSchema,
+import {  
   GraphQLObjectType,
   GraphQLID,
   GraphQLString,
@@ -10,12 +9,7 @@ import {
   GraphQLError
 } from 'graphql';
 import {
-  nodeDefinitions,
   fromGlobalId,
-  globalIdField,
-  connectionDefinitions,
-  connectionArgs,
-  connectionFromPromisedArray,
   mutationWithClientMutationId
 } from 'graphql-relay';
 import {
@@ -43,8 +37,10 @@ import emailValidator from 'email-validator';
 import bcryptjs from 'bcryptjs';
 import passwordGenerator from 'password-generator';
 
-const patientCollectionName = 'patient';
+
 const profileCollectionName = 'profile';
+const patientCollectionName = 'patient';
+const ncpCollectionName = 'ncp';
 const userCollectionName = 'user';
 
 export const UserCreateMutation = mutationWithClientMutationId({
@@ -135,7 +131,11 @@ export const UserCreateMutation = mutationWithClientMutationId({
               currentCompany: null,
               educationTitle: null,
               country: null,
-              region: null
+              region: null,
+              assessments:[],
+              diagnosis:[],
+              interventions:[],
+              evaluations:[]
             }
           }),
           ({
@@ -148,7 +148,6 @@ export const UserCreateMutation = mutationWithClientMutationId({
         );
       });
     })   
-
 
     .then(() => {
       return new Promise((resolve) => {

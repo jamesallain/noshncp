@@ -11,7 +11,6 @@ class Detail extends Component {
     isCreator: false
   };
   componentWillMount() {
-    console.log(this.props)
     this.variablesSet(this.props);
   }
   componentWillReceiveProps(nextProps) {

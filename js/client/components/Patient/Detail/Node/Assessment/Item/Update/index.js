@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import Relay, {createContainer} from 'react-relay';
 
 import BootstrapDatepicker from 'components/BootstrapDatepicker';
-import PatientAssessmentUpdateMutation from 'mutations/PatientAssessmentUpdate';
+import AssessmentUpdateMutation from 'mutations/AssessmentUpdate';
 
 class Update extends Component {
   state = {
@@ -21,7 +21,7 @@ class Update extends Component {
     this.setState({date});
   };
   errShow = (err) => {
-    $(this.refs.patientAssessmentUpdate)
+    $(this.refs.assessmentUpdate)
       .find('.form-group')
       .toArray()
       .reduce((memo, el) => {
@@ -55,15 +55,15 @@ class Update extends Component {
       }, []);
   };
   errClear = () => {
-    $(this.refs.patientAssessmentUpdate)
+    $(this.refs.assessmentUpdate)
       .find('.form-group')
       .removeClass('has-danger')
       .find('.form-control-feedback')
       .text('');
   };
-  patientAssessmentUpdate = () => {
+  assessmentUpdate = () => {
     this.props.relay.commitUpdate(
-      new PatientAssessmentUpdateMutation({
+      new AssessmentUpdateMutation({
         date: this.state.date.trim(),
         degree: this.state.degree.trim(),
         title: this.state.title.trim(),
@@ -88,7 +88,7 @@ class Update extends Component {
 
     this.errClear();
 
-    this.patientAssessmentUpdate();
+    this.assessmentUpdate();
   };
   onCancelHandle = (evnt) => {
     evnt.preventDefault();
@@ -99,7 +99,7 @@ class Update extends Component {
   formRender() {
     return (
       <form
-        ref = 'patientAssessmentUpdate'
+        ref = 'assessmentUpdate'
         className = 'col-6 col-md-4'
         onSubmit = {this.onSubmitHandle}
       >
@@ -198,21 +198,21 @@ export default createContainer(Update, {
           date,
           degree,
           title,
-          ${PatientAssessmentUpdateMutation.getFragment('item')}
+          ${AssessmentUpdateMutation.getFragment('item')}
         }
       `;
     },
     node() {
       return Relay.QL`
         fragment on Patient {
-          ${PatientAssessmentUpdateMutation.getFragment('node')}
+          ${AssessmentUpdateMutation.getFragment('node')}
         }
       `;
     },
     viewer() {
       return Relay.QL`
         fragment on Viewer {
-          ${PatientAssessmentUpdateMutation.getFragment('viewer')}
+          ${AssessmentUpdateMutation.getFragment('viewer')}
         }
       `;
     }

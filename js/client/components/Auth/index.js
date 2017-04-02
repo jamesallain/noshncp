@@ -75,6 +75,7 @@ class Auth extends Component {
       .tab('show');
   };
   navRender() {
+    console.log("auth",this.props)
     return (
       <ul
         ref = 'authTab'

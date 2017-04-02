@@ -11,10 +11,11 @@ class Detail extends Component {
     isCreator: false
   };
   componentWillMount() {
-    console.log(this.props)
+    console.log("componentWillMount:",this.props)
     this.variablesSet(this.props);
   }
   componentWillReceiveProps(nextProps) {
+    console.log("componentWillReceiveProps:",nextProps)
     if (nextProps.params.id !== this.props.params.id) {
       this.variablesSet(nextProps);
     }
@@ -22,6 +23,7 @@ class Detail extends Component {
     this.stateIsCreatorSet(nextProps);
   }
   stateNodeSet = (props) => {
+    console.log("stateNodeSet:",this.props)
     const edges = props.viewer.patient.edges;
     const node = (edges.length) && edges[0].node;
 
@@ -41,6 +43,8 @@ class Detail extends Component {
     }
   };
   variablesSet = (props) => {
+    console.log("variablesSet:",this.props)
+
     return new Promise((resolve) => {
       this.props.relay.setVariables(
         {id: props.params.id},

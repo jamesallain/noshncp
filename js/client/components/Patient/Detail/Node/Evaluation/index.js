@@ -76,6 +76,8 @@ class Evaluation extends Component {
       />;
   }
   render() {
+      console.log("evaluation:",this.props)
+
     return (
       <div className = 'Evaluation'>
         <h6>Evaluation</h6>
